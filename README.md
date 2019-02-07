@@ -15,7 +15,7 @@ This repository consists of a set of API endpoints using Django REST Framework a
 10. Run the server locally <i> $python3 manage.py runserver </i>
 
 
-#### In mySQL console, we have to create a database, a user and grant all privileges to that user since in the settings the database connection was configured that way: 
+#### In mySQL console, we have to create a database, a user and grant all privileges to that user since the database connection was configured that way in the settings: 
 
 $CREATE DATABASE relationships;
 

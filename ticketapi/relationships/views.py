@@ -1,16 +1,12 @@
-from django.views.generic import ListView, CreateView, UpdateView ## new
-from django.shortcuts import render
+# from django.shortcuts import render
 from rest_framework import routers, serializers, viewsets, generics
 from ticketapi.serializers import UserSerializer,StudentSerializer, RelationshipSerializer, CommonStudentSerializer,NotificationSerializer
-from django.contrib.auth import get_user_model
-from relationships.models import Student, Relationship
-from rest_framework.response import Response
-from rest_framework.mixins import UpdateModelMixin
-from rest_framework.generics import GenericAPIView
-from rest_framework.viewsets import GenericViewSet
-from django.http import JsonResponse
+from django.contrib.auth import get_user_model ## for user
+from relationships.models import Student, Relationship ## import the models
+from rest_framework.response import Response ## for error handling
+from django.http import JsonResponse ## for error handling
 from rest_framework.permissions import IsAuthenticated ## for authentication purposes
-import re
+import re ## for task 4
 User = get_user_model()
 
 # Create your views here.
@@ -28,30 +24,27 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
-
-
 class CommonStudentViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     # queryset = Ticket.objects.all()
     serializer_class = CommonStudentSerializer
     def get_queryset(self):
+        ## this function is to take in specified teacher email
         queryset = Relationship.objects.all()
-        temp = self.request.query_params.get('teacher_email',None)
-        if temp is not None:
-            queryset = queryset.filter(teacher_user__email = temp)
-            # print(queryset.exclude(students__email__isnull = True))
+        teacher_name_temp = self.request.query_params.get('teacher_email',None)
+        if teacher_name_temp is not None:
+            ## extract out all the relationship objects with this email
+            queryset = queryset.filter(teacher_user__email = teacher_name_temp)
+            ## use a dictionary to store all the students related to this student
             student_email_dct = {'students__email':[]}
+            print("here",set(queryset.exclude(students__email__isnull = True).values_list("students__email",flat = True).distinct()))
             for student_email in queryset.exclude(students__email__isnull = True).values_list("students__email"):
                 if student_email[0] not in student_email_dct['students__email']:
                     student_email_dct['students__email'].append(student_email[0])
-            email_1 = student_email_dct
-            # print(email_1)
-            email = list(queryset.exclude(students__email__isnull = True).values("students__email"))
-            # print(email)
-            ################## for now the view for the students do not match the user requirement #######################
-            results = CommonStudentSerializer([email_1],many = True).data
+
+            ################## for now the formatting for the students do not match the requirement as it turns out to be in string form  #######################
+            results = CommonStudentSerializer([student_email_dct],many = True).data
         return results
-        # return queryset
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
@@ -117,14 +110,3 @@ class NotificationViewSet(viewsets.ModelViewSet):
         else:
             ## to capture the other case of teacher not validated ( usually it would have been caught earlier on)
             return JsonResponse({'errorMessage':'Teacher field is none'})
-
-    def get_queryset(self):
-        queryset = Student.objects.all()
-        print(self.request.data)
-        queryset = queryset.filter(suspended = False)
-        recipient_email_dct = {'recipients':[]}
-        for student_email in queryset.values_list("email"):
-            if student_email[0] not in recipient_email_dct['recipients']:
-                recipient_email_dct['recipients'].append(student_email[0])
-        print(recipient_email_dct)
-        return NotificationSerializer([recipient_email_dct],many = True).data

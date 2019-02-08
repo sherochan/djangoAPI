@@ -23,4 +23,22 @@ $CREATE USER 'ticketUser'@'localhost' IDENTIFIED BY 'password';
 
 $GRANT ALL PRIVILEGES ON relationships.* TO 'ticketUser'@'localhost';
 
+#### Testing: Please run on the local server these commands 
+Users(Teachers) have to be added first as a superuser. To add new Teacher, in the virtual environment , run this <i> $python manage.py createsuperuser </i> and follow the instructions. Next, head to the admin page and log in with the credentials of any Teacher on the local instance http://127.0.0.1:8000/admin/ . Go to the Relationship tab to add all the Teachers first. Next, go to the Students tab and add all the emails of the students and register them to the different Teachers.
+
+1. Endpoint: POST /api/register
+- Run this in your local browser by entering http://127.0.0.1:8000/api/register/
+- This endpoint allows for multiple existing Student objects to be registered to an existing Teacher object in the database
+2. Endpoint: GET /api/commonstudents?teacher_email=teacherken@40example.com
+- Run this in your local browser by entering http://127.0.0.1:8000/api/commonstudents/?teacher_email=teacherken@40example.com
+- however, please note that the response body and the query do not match the one stated in pdf.
+3. Endpoint: POST /api/suspend
+- Run this in your local browser by entering http://127.0.0.1:8000/api/suspend/
+- this endpoint allows for the update of a Student object on his/her suspension
+4. Endpoint: GET /api/retrievefornotifications/
+- Run this in your local browser http://127.0.0.1:8000/api/retrievefornotifications/
+- this endpoint allows a specified teacher to send notification and return it in terms of the students 
+- however, please note that the response body do not match the one stated in pdf.
+#### Disclaimer: Being new to the Django REST framework and that this was done in a week, please note that this is not a fully working application and some parts of the requirements in the pdf file are not fulfilled.
+
 

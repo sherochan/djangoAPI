@@ -39,6 +39,6 @@ Users(Teachers) have to be added first as a superuser. To add new Teacher, in th
 - Run this in your local browser http://127.0.0.1:8000/api/retrievefornotifications/
 - this endpoint allows a specified teacher to send notification and return it in terms of the students 
 - however, please note that the response body do not match the one stated in pdf.
-#### Disclaimer: Since the Django REST framework is something new to me and that this was done under a time constraint, please note that this application is a work in progress and might not fulfill some parts of the requirements in the pdf file.
+#### Disclaimer: Since the Django REST framework and software engineering concepts are relatively new to me and that this was done under a time constraint, please note that this application is a work in progress and might not fulfill some parts of the requirements in the pdf file.
 
 

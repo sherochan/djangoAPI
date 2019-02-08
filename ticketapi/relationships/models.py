@@ -1,5 +1,5 @@
 from django.db import models
-# import uuid
+import uuid
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -18,14 +18,14 @@ class Relationship(models.Model):
 
     def __str__(self):
         ## view using email of teacher
-        return self.teacher_user
+        return str(self.teacher_user)
 
 
 class Student(models.Model):
     ## student entity
     email = models.EmailField(max_length = 254, unique = True)
     created = models.DateTimeField(auto_now=True)
-    ticket = models.ManyToManyField(Relationship,related_name = "students")
+    relationship = models.ManyToManyField(Relationship,related_name = "students")
     suspended = models.BooleanField(default = False)
 
     class Meta:
